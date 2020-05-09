@@ -12,7 +12,7 @@ export const SET_EMAIL = '[MTN PROJECT] set email';
 
 export const getUserTicks = createAction(GET_USER_TICKS);
 export const getUserTicksSuccess = createAction(
-  GET_USER_TICKS,
+  GET_USER_TICKS_SUCCESS,
   props<{ ticks: MtnProjTick[] }>()
 );
 export const getUserTickFailure = createAction(GET_USER_TICKS_FAILURE);

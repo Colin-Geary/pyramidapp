@@ -43,10 +43,13 @@ export class MtnProjectEffects {
               .getRoutesFromIds(routeIds)
               .pipe(map(routes => ({ routes, ticks })));
           }),
-          mergeMap(({ ticks, routes }) => [
-            getUserTicksSuccess({ ticks }),
-            getUserRoutesSuccess({ routes: routes.routes })
-          ]),
+          mergeMap(({ ticks, routes }) => {
+            console.log('HERE');
+            return [
+              getUserTicksSuccess({ ticks }),
+              getUserRoutesSuccess({ routes: routes.routes })
+            ];
+          }),
           catchError(err => of(getUserTickFailure()))
         )
       )

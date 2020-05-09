@@ -1,8 +1,23 @@
-<button (click)="onClick()">Set Email</button>
-<button (click)="onClickRouteIds()">Get Route Ids</button>
-<div *ngIf="routeRatings$ | async as routeEntity">
+<div class="form-group">
+  <label for="email">Email</label>
+  <input
+    [formControl]="email"
+    type="text"
+    placeholder="Mountain Project Email..."
+  />
+</div>
+<app-spinner *ngIf="loading$ | async as loading"></app-spinner>
+<div *ngIf="routeRatings$ | async as routeEntity; else noUser">
   <app-horizontal-bar-chart
     *ngIf="routeEntity"
     [routeEntity]="routeEntity"
   ></app-horizontal-bar-chart>
 </div>
+<ng-template #noUser>
+  <div
+    class="warning"
+    *ngIf="email.valid && !email.pristine && !(loading$ | async)"
+  >
+    * Unable to find Mountain Project email
+  </div>
+</ng-template>

@@ -26,9 +26,15 @@ const initialState: State = {
 
 const mtnProjectReducer = createReducer(
   initialState,
-  on(getUserTicks, state => ({ ...state, loading: true, loaded: false })),
+  on(getUserTicks, state => ({
+    ...state,
+    loading: true,
+    loaded: false
+  })),
   on(getUserTickFailure, state => ({
     ...state,
+    ticks: [],
+    routes: [],
     loading: false,
     loaded: false
   })),

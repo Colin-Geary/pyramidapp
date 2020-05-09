@@ -52,3 +52,13 @@ export const selectRouteRatings = createSelector(
     return Object.keys(entityMap).length ? entityMap : null;
   }
 );
+
+export const loadingSelector = createSelector(
+  selectPyramid,
+  (state: State) => state.loading
+);
+
+export const loadedSelector = createSelector(
+  selectPyramid,
+  (state: State) => state.loaded
+);
