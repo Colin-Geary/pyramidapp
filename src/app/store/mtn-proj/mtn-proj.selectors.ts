@@ -30,26 +30,31 @@ export const selectRoutes = createSelector(
 
 export const selectRouteRatings = createSelector(
   selectRoutes,
-  (routes: MtnProjRoute[]) => {
+  (
+    routes: MtnProjRoute[],
+    props: { min: ClimbingRating; max: ClimbingRating }
+  ) => {
     const entityMap: RouteEntity = {};
+    const grades = CLIMBING_RATING_ORDER.slice(
+      CLIMBING_RATING_ORDER.indexOf(props.min),
+      CLIMBING_RATING_ORDER.indexOf(props.max) + 1
+    );
+    grades.map(r => {
+      entityMap[r] = 0;
+    });
     routes.forEach(r => {
       let rating = r.rating;
       if (rating === '5.11-') {
         rating = '5.11a';
       }
 
-      if (!CLIMBING_RATING_ORDER.includes(rating)) {
+      if (!grades.includes(rating)) {
         return;
       }
-
-      if (entityMap[rating]) {
-        entityMap[rating]++;
-      } else {
-        entityMap[rating] = 1;
-      }
+      entityMap[rating]++;
     });
 
-    return Object.keys(entityMap).length ? entityMap : null;
+    return Object.values(entityMap).reduce((a, b) => a + b) ? entityMap : null;
   }
 );
 

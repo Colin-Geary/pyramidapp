@@ -11,8 +11,20 @@
   <app-horizontal-bar-chart
     *ngIf="routeEntity"
     [routeEntity]="routeEntity"
+    labelName="Your Pyramid"
+    color="#fcb900"
+    hoverColor="#ffce49"
+    [min]="min"
+    [max]="max"
   ></app-horizontal-bar-chart>
 </div>
+<app-horizontal-bar-chart
+  [routeEntity]="idealRouteRatings"
+  labelName="Ideal Pyramid"
+  color="#333333"
+  [min]="min"
+  [max]="max"
+></app-horizontal-bar-chart>
 <ng-template #noUser>
   <div
     class="warning"

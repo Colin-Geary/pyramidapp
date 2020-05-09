@@ -15,6 +15,19 @@ export class HorizontalBarChartComponent implements OnInit {
   @Input()
   routeEntity: RouteEntity;
 
+  @Input()
+  labelName: string;
+
+  @Input()
+  color: string;
+  @Input()
+  hoverColor: string;
+
+  @Input()
+  max: number;
+  @Input()
+  min: number;
+
   barChartLabels: Label[];
   barChartData: ChartDataSets[];
 
@@ -29,7 +42,9 @@ export class HorizontalBarChartComponent implements OnInit {
               if (value % 1 === 0) {
                 return value;
               }
-            }
+            },
+            max: 14,
+            min: 0
           }
         }
       ]
@@ -66,9 +81,9 @@ export class HorizontalBarChartComponent implements OnInit {
     this.barChartData = [
       {
         data: sorted.map(v => v.count),
-        label: 'Sends',
-        backgroundColor: '#fcb900',
-        hoverBackgroundColor: '#ffce49'
+        label: this.labelName,
+        backgroundColor: this.color,
+        hoverBackgroundColor: this.hoverColor
       }
     ];
   }

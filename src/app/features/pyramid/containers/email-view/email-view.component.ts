@@ -8,7 +8,8 @@ import {
   MtnProjTick,
   MtnProjRoute,
   ClimbingRating,
-  RouteEntity
+  RouteEntity,
+  CLIMBING_RATING_ORDER
 } from 'src/app/models/mtn-proj.models';
 import { Observable, fromEvent } from 'rxjs';
 import {
@@ -28,14 +29,21 @@ import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 })
 export class EmailViewComponent implements OnInit {
   routeRatings$: Observable<RouteEntity>;
+  routes$: Observable<MtnProjRoute[]>;
   loading$: Observable<boolean>;
   loaded$: Observable<boolean>;
   email: FormControl = new FormControl(null, [Validators.email]);
+  idealRouteRatings: RouteEntity;
+  max: number;
+  min: number;
 
   constructor(private store: Store<any>) {}
 
   ngOnInit(): void {
-    this.routeRatings$ = this.store.pipe(select(selectRouteRatings));
+    this.routeRatings$ = this.store.pipe(
+      select(selectRouteRatings, { min: '5.10a', max: '5.13a' })
+    );
+    this.routes$ = this.store.pipe(select(selectRoutes));
     this.loading$ = this.store
       .pipe(select(loadingSelector))
       .pipe(debounceTime(100));
@@ -49,5 +57,33 @@ export class EmailViewComponent implements OnInit {
         this.store.dispatch(setEmailAction({ email }));
         this.store.dispatch(getUserTicks());
       });
+
+    this.idealRouteRatings = this.getIdealEntityMap('5.13a', '5.10a');
+    const values = Object.values(this.idealRouteRatings);
+    this.max = Math.max(...values);
+    this.min = Math.min(...values);
+  }
+
+  getIdealEntityMap(
+    idealGrade: ClimbingRating,
+    lowerBound: ClimbingRating
+  ): RouteEntity {
+    const grades = CLIMBING_RATING_ORDER.slice(
+      CLIMBING_RATING_ORDER.indexOf(lowerBound),
+      CLIMBING_RATING_ORDER.indexOf(idealGrade) + 1
+    );
+    const count = grades.length;
+    const totalClimbsNeeded = (count * count + count) / 2;
+
+    const entityMap: RouteEntity = {};
+    for (let i = count; i > 0; i--) {
+      console.log('grades[i - 1]: ', grades[i - 1], i);
+      const layer = count - i + 1;
+      console.log('layer: ', layer);
+      entityMap[grades[i - 1]] = layer;
+    }
+
+    console.log('entityMap: ', entityMap);
+    return entityMap;
   }
 }
