@@ -1,22 +1,44 @@
 <div class="form-group">
   <label for="email">Email</label>
   <input
+    class="form-field"
     [formControl]="email"
     type="text"
     placeholder="Mountain Project Email..."
   />
 </div>
+<div class="form-group">
+  <label for="max-grade">Max Grade</label>
+  <select class="form-field" [formControl]="maxGrade" name="max-grade">
+    <option *ngFor="let grade of climbingGradesDescending" [value]="grade">{{
+      grade
+    }}</option>
+  </select>
+</div>
+<div class="form-group">
+  <label for="min-grade">Min Grade</label>
+  <select class="form-field" [formControl]="minGrade" name="min-grade">
+    <option *ngFor="let grade of climbingGrades" [value]="grade">{{
+      grade
+    }}</option>
+  </select>
+</div>
 <app-spinner *ngIf="loading$ | async as loading"></app-spinner>
 <div *ngIf="routeRatings$ | async as routeEntity; else noUser">
   <app-horizontal-bar-chart
-    *ngIf="routeEntity"
-    [idealRouteEntity]="idealRouteRatings"
+    *ngIf="
+      routeEntity && {
+        idealRouteRatings: idealRouteRatings$ | async,
+        minMaxClimbs: minMaxClimbs$ | async
+      } as data
+    "
+    [idealRouteEntity]="data.idealRouteRatings"
     [actualRouteEntity]="routeEntity"
     labelName="Your Pyramid"
     color="#fcb900"
     hoverColor="#ffce49"
-    [min]="min"
-    [max]="max"
+    [min]="data.minMaxClimbs.min"
+    [max]="data.minMaxClimbs.max"
   ></app-horizontal-bar-chart>
 </div>
 <ng-template #noUser>

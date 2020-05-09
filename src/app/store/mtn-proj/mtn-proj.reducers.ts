@@ -4,14 +4,23 @@ import {
   setEmailAction,
   getUserTicksSuccess,
   getUserTickFailure,
-  getUserRoutesSuccess
+  getUserRoutesSuccess,
+  setMinGradeAction,
+  setMaxGradeAction
 } from './mtn-proj.actions';
-import { MtnProjTick, MtnProjRoute } from 'src/app/models/mtn-proj.models';
+import {
+  MtnProjTick,
+  MtnProjRoute,
+  ClimbingRating,
+  CLIMBING_RATING_ORDER
+} from 'src/app/models/mtn-proj.models';
 
 export interface State {
   email: string;
   ticks: MtnProjTick[];
   routes: MtnProjRoute[];
+  minGrade: string;
+  maxGrade: string;
   loading: boolean;
   loaded: boolean;
 }
@@ -20,6 +29,8 @@ const initialState: State = {
   email: '',
   ticks: [],
   routes: [],
+  minGrade: CLIMBING_RATING_ORDER[0],
+  maxGrade: CLIMBING_RATING_ORDER[CLIMBING_RATING_ORDER.length - 1],
   loading: false,
   loaded: false
 };
@@ -50,7 +61,15 @@ const mtnProjectReducer = createReducer(
     loading: false,
     loaded: true
   })),
-  on(setEmailAction, (state, { email }) => ({ ...state, email }))
+  on(setEmailAction, (state, { email }) => ({ ...state, email })),
+  on(setMinGradeAction, (state, { min }) => ({
+    ...state,
+    minGrade: min
+  })),
+  on(setMaxGradeAction, (state, { max }) => ({
+    ...state,
+    maxGrade: max
+  }))
 );
 
 export function reducer(state: State | undefined, action: Action) {

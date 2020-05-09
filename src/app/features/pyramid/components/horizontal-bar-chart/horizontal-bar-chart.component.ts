@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import {
@@ -11,7 +11,7 @@ import {
   templateUrl: './horizontal-bar-chart.component.html',
   styleUrls: ['./horizontal-bar-chart.component.scss']
 })
-export class HorizontalBarChartComponent implements OnInit {
+export class HorizontalBarChartComponent implements OnInit, OnChanges {
   @Input()
   idealRouteEntity: RouteEntity;
 
@@ -49,8 +49,8 @@ export class HorizontalBarChartComponent implements OnInit {
                 return value;
               }
             },
-            max: 14,
-            min: 0
+            max: this.max,
+            min: this.min
           }
         }
       ]
@@ -75,6 +75,9 @@ export class HorizontalBarChartComponent implements OnInit {
   // ];
 
   constructor() {}
+  ngOnChanges(changes: import('@angular/core').SimpleChanges): void {
+    this.ngOnInit();
+  }
 
   ngOnInit() {
     const { barChartData, barChartLabels } = this.getChartLabelsAndValues(

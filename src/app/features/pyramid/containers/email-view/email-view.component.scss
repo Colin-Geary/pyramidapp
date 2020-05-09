@@ -1,5 +1,6 @@
 .form-group {
   display: flex;
+  margin-top: 20px;
   flex-direction: column;
 
   label {
@@ -10,12 +11,13 @@
     text-transform: uppercase;
   }
 
-  input {
+  .form-field {
     border-radius: 3px;
     border: 1px solid rgb(187, 187, 187);
     padding: 12px;
     font-size: 16px;
     font-weight: 300;
+    background-color: transparent;
 
     &::placeholder {
       font-family: "Libre Franklin", sans-serif;
@@ -34,4 +36,8 @@
 .warning {
   margin: 22px;
   font-weight: 300;
+}
+
+.test {
+  border: 2px solid red;
 }

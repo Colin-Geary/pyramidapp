@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import {
   setEmailAction,
-  getUserTicks
+  getUserTicks,
+  setMinGradeAction,
+  setMaxGradeAction
 } from 'src/app/store/mtn-proj/mtn-proj.actions';
 import {
   MtnProjTick,
@@ -17,10 +19,19 @@ import {
   selectRoutes,
   selectRouteRatings,
   loadingSelector,
-  loadedSelector
+  loadedSelector,
+  minMaxGradeSelector
 } from 'src/app/store/mtn-proj/mtn-proj.selectors';
 import { FormControl, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  withLatestFrom,
+  switchMap,
+  tap,
+  map
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-email-view',
@@ -32,16 +43,31 @@ export class EmailViewComponent implements OnInit {
   routes$: Observable<MtnProjRoute[]>;
   loading$: Observable<boolean>;
   loaded$: Observable<boolean>;
+  minMaxGrade$: Observable<{ min: string; max: string }>;
+  idealRouteRatings$: Observable<RouteEntity>;
+  minMaxClimbs$: Observable<{ min: number; max: number }>;
   email: FormControl = new FormControl(null, [Validators.email]);
-  idealRouteRatings: RouteEntity;
+  minGrade: FormControl = new FormControl();
+  maxGrade: FormControl = new FormControl();
   max: number;
   min: number;
+  climbingGrades: string[] = CLIMBING_RATING_ORDER;
+  climbingGradesDescending: string[] = [...CLIMBING_RATING_ORDER].reverse();
 
   constructor(private store: Store<any>) {}
 
   ngOnInit(): void {
-    this.routeRatings$ = this.store.pipe(
-      select(selectRouteRatings, { min: '5.10a', max: '5.13a' })
+    this.minMaxGrade$ = this.store.pipe(select(minMaxGradeSelector));
+    this.minMaxGrade$.subscribe(({ min, max }) => {
+      if (this.minGrade.value !== min && this.maxGrade.value !== max) {
+        this.maxGrade.setValue(max);
+        this.minGrade.setValue(min);
+      }
+    });
+    this.routeRatings$ = this.minMaxGrade$.pipe(
+      switchMap(({ min, max }) =>
+        this.store.pipe(select(selectRouteRatings, { min, max }))
+      )
     );
     this.routes$ = this.store.pipe(select(selectRoutes));
     this.loading$ = this.store
@@ -57,11 +83,29 @@ export class EmailViewComponent implements OnInit {
         this.store.dispatch(setEmailAction({ email }));
         this.store.dispatch(getUserTicks());
       });
+    this.maxGrade.setValue(this.climbingGradesDescending[0]);
+    this.minGrade.setValue(this.climbingGrades[0]);
+    this.minGrade.valueChanges.subscribe(min =>
+      this.store.dispatch(setMinGradeAction({ min }))
+    );
+    this.maxGrade.valueChanges.subscribe(max =>
+      this.store.dispatch(setMaxGradeAction({ max }))
+    );
 
-    this.idealRouteRatings = this.getIdealEntityMap('5.13a', '5.10a');
-    const values = Object.values(this.idealRouteRatings);
-    this.max = Math.max(...values);
-    this.min = Math.min(...values);
+    this.idealRouteRatings$ = this.minMaxGrade$.pipe(
+      map(({ min, max }) =>
+        this.getIdealEntityMap(max as ClimbingRating, min as ClimbingRating)
+      )
+    );
+
+    this.minMaxClimbs$ = this.idealRouteRatings$.pipe(
+      map(entity => {
+        const values = Object.values(entity);
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        return { min, max };
+      })
+    );
   }
 
   getIdealEntityMap(

@@ -40,7 +40,11 @@ export type ClimbingRating =
   | '5.13a'
   | '5.13b'
   | '5.13c'
-  | '5.13d';
+  | '5.13d'
+  | '5.14a'
+  | '5.14b'
+  | '5.14c'
+  | '5.14d';
 
 export const CLIMBING_RATING_ORDER = [
   '5.5',
@@ -63,7 +67,11 @@ export const CLIMBING_RATING_ORDER = [
   '5.13a',
   '5.13b',
   '5.13c',
-  '5.13d'
+  '5.13d',
+  '5.14a',
+  '5.14b',
+  '5.14c',
+  '5.14d'
 ];
 
 export interface MtnProjRoute {

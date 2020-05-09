@@ -32,10 +32,17 @@ export const selectRouteRatings = createSelector(
   selectRoutes,
   (
     routes: MtnProjRoute[],
-    props: { min: ClimbingRating; max: ClimbingRating }
+    props?: { min: ClimbingRating; max: ClimbingRating }
   ) => {
     const entityMap: RouteEntity = {};
-    const grades = CLIMBING_RATING_ORDER.slice(
+    const grades =
+      props?.min && props?.max
+        ? CLIMBING_RATING_ORDER.slice(
+            CLIMBING_RATING_ORDER.indexOf(props.min),
+            CLIMBING_RATING_ORDER.indexOf(props.max) + 1
+          )
+        : CLIMBING_RATING_ORDER;
+    const test = CLIMBING_RATING_ORDER.slice(
       CLIMBING_RATING_ORDER.indexOf(props.min),
       CLIMBING_RATING_ORDER.indexOf(props.max) + 1
     );
@@ -44,9 +51,6 @@ export const selectRouteRatings = createSelector(
     });
     routes.forEach(r => {
       let rating = r.rating;
-      if (rating === '5.11-') {
-        rating = '5.11a';
-      }
 
       if (!grades.includes(rating)) {
         return;
@@ -66,4 +70,9 @@ export const loadingSelector = createSelector(
 export const loadedSelector = createSelector(
   selectPyramid,
   (state: State) => state.loaded
+);
+
+export const minMaxGradeSelector = createSelector(
+  selectPyramid,
+  (state: State) => ({ min: state.minGrade, max: state.maxGrade })
 );
