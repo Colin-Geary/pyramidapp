@@ -7,7 +7,7 @@ export interface MtnProjTickResponse {
 
 export interface MtnProjTick {
   date: string;
-  leadStyle: 'Flash' | 'Redpoint';
+  leadStyle: 'Flash' | 'Redpoint' | 'Onsight';
   notes: number;
   pitches: number;
   routeId: number;

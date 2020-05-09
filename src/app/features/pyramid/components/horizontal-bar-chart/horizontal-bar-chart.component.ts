@@ -56,10 +56,16 @@ export class HorizontalBarChartComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.barChartLabels = this.sortRatings(Object.keys(this.routeEntity));
+    const difficulties = Object.keys(this.routeEntity);
+    const counts = Object.values(this.routeEntity);
+    const joinedDifficultyAndCount = difficulties.map((d, index) => {
+      return { difficulty: d, count: counts[index] };
+    });
+    const sorted = this.sortRatingsAndDifficulties(joinedDifficultyAndCount);
+    this.barChartLabels = sorted.map(v => v.difficulty);
     this.barChartData = [
       {
-        data: Object.values(this.routeEntity),
+        data: sorted.map(v => v.count),
         label: 'Sends',
         backgroundColor: '#fcb900',
         hoverBackgroundColor: '#ffce49'
@@ -67,11 +73,14 @@ export class HorizontalBarChartComponent implements OnInit {
     ];
   }
 
-  private sortRatings(ratingsArray: string[]) {
+  private sortRatingsAndDifficulties(
+    ratingsArray: { difficulty: string; count: number }[]
+  ) {
     const itemsArray = [...ratingsArray];
     itemsArray.sort(function(a, b) {
       return (
-        CLIMBING_RATING_ORDER.indexOf(b) - CLIMBING_RATING_ORDER.indexOf(a)
+        CLIMBING_RATING_ORDER.indexOf(b.difficulty) -
+        CLIMBING_RATING_ORDER.indexOf(a.difficulty)
       );
     });
 

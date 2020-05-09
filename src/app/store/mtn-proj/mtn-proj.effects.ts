@@ -38,13 +38,19 @@ export class MtnProjectEffects {
       exhaustMap(([action, email]) =>
         this.mtnProjectService.getUserTicks(email).pipe(
           mergeMap(({ ticks }) => {
-            const routeIds = ticks.map(t => t.routeId);
+            const routeIds = ticks
+              .filter(
+                t =>
+                  t.leadStyle === 'Flash' ||
+                  t.leadStyle === 'Onsight' ||
+                  t.leadStyle === 'Redpoint'
+              )
+              .map(t => t.routeId);
             return this.mtnProjectService
               .getRoutesFromIds(routeIds)
               .pipe(map(routes => ({ routes, ticks })));
           }),
           mergeMap(({ ticks, routes }) => {
-            console.log('HERE');
             return [
               getUserTicksSuccess({ ticks }),
               getUserRoutesSuccess({ routes: routes.routes })
