@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import {
@@ -13,7 +13,10 @@ import {
 })
 export class HorizontalBarChartComponent implements OnInit {
   @Input()
-  routeEntity: RouteEntity;
+  idealRouteEntity: RouteEntity;
+
+  @Input()
+  actualRouteEntity: RouteEntity;
 
   @Input()
   labelName: string;
@@ -27,6 +30,9 @@ export class HorizontalBarChartComponent implements OnInit {
   max: number;
   @Input()
   min: number;
+
+  screenHeight: number;
+  screenWidth: number;
 
   barChartLabels: Label[];
   barChartData: ChartDataSets[];
@@ -68,24 +74,53 @@ export class HorizontalBarChartComponent implements OnInit {
   //   { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
   // ];
 
-  constructor() {}
+  constructor() {
+    this.onResize();
+  }
 
   ngOnInit() {
-    const difficulties = Object.keys(this.routeEntity);
-    const counts = Object.values(this.routeEntity);
+    const { barChartData, barChartLabels } = this.getChartLabelsAndValues(
+      this.idealRouteEntity,
+      '#333333',
+      'Ideal Pyramid'
+    );
+    const { barChartData: actualBarChartData } = this.getChartLabelsAndValues(
+      this.actualRouteEntity,
+      this.color,
+      this.labelName
+    );
+    this.barChartLabels = barChartLabels;
+    this.barChartData = [...barChartData, ...actualBarChartData];
+  }
+
+  getChartLabelsAndValues(
+    routeEntity: RouteEntity,
+    color: string,
+    label: string
+  ) {
+    const difficulties = Object.keys(routeEntity);
+    const counts = Object.values(routeEntity);
     const joinedDifficultyAndCount = difficulties.map((d, index) => {
       return { difficulty: d, count: counts[index] };
     });
     const sorted = this.sortRatingsAndDifficulties(joinedDifficultyAndCount);
-    this.barChartLabels = sorted.map(v => v.difficulty);
-    this.barChartData = [
+    const barChartLabels = sorted.map(v => v.difficulty);
+    const barChartData = [
       {
         data: sorted.map(v => v.count),
-        label: this.labelName,
-        backgroundColor: this.color,
+        label: label,
+        backgroundColor: color,
         hoverBackgroundColor: this.hoverColor
       }
     ];
+    return { barChartData, barChartLabels };
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenHeight = window.innerHeight;
+    console.log('this.screenHeight : ', this.screenHeight);
+    this.screenWidth = window.innerWidth;
   }
 
   private sortRatingsAndDifficulties(
