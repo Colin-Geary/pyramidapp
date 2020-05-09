@@ -6,12 +6,15 @@ import {
   withLatestFrom,
   exhaustMap,
   map,
-  catchError
+  catchError,
+  mergeMap
 } from 'rxjs/operators';
 import {
   GET_USER_TICKS,
   getUserTicksSuccess,
-  getUserTickFailure
+  getUserTickFailure,
+  GET_USER_TICKS_SUCCESS,
+  getUserRoutesSuccess
 } from './mtn-proj.actions';
 import { of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
@@ -26,15 +29,26 @@ export class MtnProjectEffects {
     private store: Store<any>,
     private mtnProjectService: MtnProjService
   ) {}
-  loadRouteIds$ = createEffect(() =>
+  loadUserTicks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(GET_USER_TICKS),
       concatMap(action =>
         of(action).pipe(withLatestFrom(this.store.pipe(select(selectEmail))))
       ),
       exhaustMap(([action, email]) =>
-        this.mtnProjectService.getRouteIds(email).pipe(
-          map(({ ticks }) => getUserTicksSuccess({ ticks })),
+        this.mtnProjectService.getUserTicks(email).pipe(
+          mergeMap(({ ticks }) => {
+            console.log('ticks concat: ', ticks);
+            const routeIds = ticks.map(t => t.routeId);
+            return this.mtnProjectService
+              .getRoutesFromIds(routeIds)
+              .pipe(map(routes => ({ routes, ticks })));
+          }),
+          tap(stuff => console.log('stuff: ', stuff)),
+          mergeMap(({ ticks, routes }) => [
+            getUserTicksSuccess({ ticks }),
+            getUserRoutesSuccess({ routes: routes.routes })
+          ]),
           catchError(err => of(getUserTickFailure()))
         )
       )

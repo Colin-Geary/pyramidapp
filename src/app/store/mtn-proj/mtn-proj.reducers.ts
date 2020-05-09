@@ -3,13 +3,15 @@ import {
   getUserTicks,
   setEmailAction,
   getUserTicksSuccess,
-  getUserTickFailure
+  getUserTickFailure,
+  getUserRoutesSuccess
 } from './mtn-proj.actions';
-import { MtnProjTick } from 'src/app/models/mtn-proj.models';
+import { MtnProjTick, MtnProjRoute } from 'src/app/models/mtn-proj.models';
 
 export interface State {
   email: string;
   ticks: MtnProjTick[];
+  routes: MtnProjRoute[];
   loading: boolean;
   loaded: boolean;
 }
@@ -17,6 +19,7 @@ export interface State {
 const initialState: State = {
   email: '',
   ticks: [],
+  routes: [],
   loading: false,
   loaded: false
 };
@@ -32,6 +35,12 @@ const mtnProjectReducer = createReducer(
   on(getUserTicksSuccess, (state, { ticks }) => ({
     ...state,
     ticks,
+    loading: false,
+    loaded: true
+  })),
+  on(getUserRoutesSuccess, (state, { routes }) => ({
+    ...state,
+    routes,
     loading: false,
     loaded: true
   })),
