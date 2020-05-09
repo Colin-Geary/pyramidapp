@@ -2,7 +2,8 @@ import { createReducer, on, Action } from '@ngrx/store';
 import {
   getUserTicks,
   setEmailAction,
-  getUserTicksSuccess
+  getUserTicksSuccess,
+  getUserTickFailure
 } from './mtn-proj.actions';
 import { MtnProjTick } from 'src/app/models/mtn-proj.models';
 
@@ -22,7 +23,12 @@ const initialState: State = {
 
 const mtnProjectReducer = createReducer(
   initialState,
-  on(getUserTicks, state => ({ ...state, loading: true })),
+  on(getUserTicks, state => ({ ...state, loading: true, loaded: false })),
+  on(getUserTickFailure, state => ({
+    ...state,
+    loading: false,
+    loaded: false
+  })),
   on(getUserTicksSuccess, (state, { ticks }) => ({
     ...state,
     ticks,

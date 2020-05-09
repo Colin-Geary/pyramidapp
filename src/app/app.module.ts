@@ -10,7 +10,8 @@ import * as fromMtnProject from './store/mtn-proj/mtn-proj.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { MtnProjectEffects } from './store/mtn-proj/mtn-proj.effects';
 import { EmailViewModule } from './features/pyramid/containers/email-view/email-view.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { KeyInterceptor } from './features/pyramid/interceptors/pyramid.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +29,13 @@ import { HttpClientModule } from '@angular/common/http';
     EffectsModule.forRoot([MtnProjectEffects]),
     EmailViewModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: KeyInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

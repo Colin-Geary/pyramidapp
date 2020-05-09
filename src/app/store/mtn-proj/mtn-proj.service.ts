@@ -10,7 +10,7 @@ export class MtnProjService {
 
   getRouteIds(email: string) {
     return this.http.get<MtnProjTickResponse>(
-      `https://www.mountainproject.com/data/get-ticks?email=${email}&key=200749834-e4eb848bdff7842a7ce20605e4c2fdee`
+      `https://www.mountainproject.com/data/get-ticks?email=${email}`
     );
   }
 }

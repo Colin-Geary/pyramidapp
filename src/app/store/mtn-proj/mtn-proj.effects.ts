@@ -5,9 +5,14 @@ import {
   concatMap,
   withLatestFrom,
   exhaustMap,
-  map
+  map,
+  catchError
 } from 'rxjs/operators';
-import { GET_USER_TICKS, getUserTicksSuccess } from './mtn-proj.actions';
+import {
+  GET_USER_TICKS,
+  getUserTicksSuccess,
+  getUserTickFailure
+} from './mtn-proj.actions';
 import { of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { State } from './mtn-proj.reducers';
@@ -29,10 +34,8 @@ export class MtnProjectEffects {
       ),
       exhaustMap(([action, email]) =>
         this.mtnProjectService.getRouteIds(email).pipe(
-          map(({ ticks }) => {
-            console.log('ticks: ', ticks);
-            return getUserTicksSuccess({ ticks });
-          })
+          map(({ ticks }) => getUserTicksSuccess({ ticks })),
+          catchError(err => of(getUserTickFailure()))
         )
       )
     )
