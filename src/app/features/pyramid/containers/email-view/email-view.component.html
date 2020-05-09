@@ -1,0 +1,7 @@
+<button (click)="onClick()">Set Email</button>
+<button (click)="onClickRouteIds()">Get Route Ids</button>
+<div *ngIf="ticks$ | async as ticks">
+  <div *ngFor="let tick of ticks">
+    {{ tick | json }}
+  </div>
+</div>
