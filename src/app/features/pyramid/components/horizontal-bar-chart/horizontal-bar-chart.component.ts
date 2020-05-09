@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import {
@@ -74,9 +74,7 @@ export class HorizontalBarChartComponent implements OnInit {
   //   { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
   // ];
 
-  constructor() {
-    this.onResize();
-  }
+  constructor() {}
 
   ngOnInit() {
     const { barChartData, barChartLabels } = this.getChartLabelsAndValues(
@@ -114,13 +112,6 @@ export class HorizontalBarChartComponent implements OnInit {
       }
     ];
     return { barChartData, barChartLabels };
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event?) {
-    this.screenHeight = window.innerHeight;
-    console.log('this.screenHeight : ', this.screenHeight);
-    this.screenWidth = window.innerWidth;
   }
 
   private sortRatingsAndDifficulties(
