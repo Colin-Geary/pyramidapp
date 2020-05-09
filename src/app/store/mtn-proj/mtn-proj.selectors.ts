@@ -1,6 +1,11 @@
 import { State } from './mtn-proj.reducers';
 import { createSelector } from '@ngrx/store';
-import { MtnProjRoute } from 'src/app/models/mtn-proj.models';
+import {
+  MtnProjRoute,
+  ClimbingRating,
+  RouteEntity,
+  CLIMBING_RATING_ORDER
+} from 'src/app/models/mtn-proj.models';
 
 export interface AppState {
   pyramid: State;
@@ -25,5 +30,25 @@ export const selectRoutes = createSelector(
 
 export const selectRouteRatings = createSelector(
   selectRoutes,
-  (routes: MtnProjRoute[]) => routes.map(r => r.rating)
+  (routes: MtnProjRoute[]) => {
+    const entityMap: RouteEntity = {};
+    routes.forEach(r => {
+      let rating = r.rating;
+      if (rating === '5.11-') {
+        rating = '5.11a';
+      }
+
+      if (!CLIMBING_RATING_ORDER.includes(rating)) {
+        return;
+      }
+
+      if (entityMap[rating]) {
+        entityMap[rating]++;
+      } else {
+        entityMap[rating] = 1;
+      }
+    });
+
+    return Object.keys(entityMap).length ? entityMap : null;
+  }
 );

@@ -7,7 +7,8 @@ import {
 import {
   MtnProjTick,
   MtnProjRoute,
-  ClimbingRating
+  ClimbingRating,
+  RouteEntity
 } from 'src/app/models/mtn-proj.models';
 import { Observable } from 'rxjs';
 import {
@@ -22,7 +23,7 @@ import {
   styleUrls: ['./email-view.component.scss']
 })
 export class EmailViewComponent implements OnInit {
-  routeRatings$: Observable<ClimbingRating[]>;
+  routeRatings$: Observable<RouteEntity>;
 
   constructor(private store: Store<any>) {}
 

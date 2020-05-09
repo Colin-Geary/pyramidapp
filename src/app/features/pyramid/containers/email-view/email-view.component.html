@@ -1,7 +1,8 @@
 <button (click)="onClick()">Set Email</button>
 <button (click)="onClickRouteIds()">Get Route Ids</button>
-<div *ngIf="routeRatings$ | async as routes">
-  <div *ngFor="let route of routes">
-    {{ route }}
-  </div>
+<div *ngIf="routeRatings$ | async as routeEntity">
+  <app-horizontal-bar-chart
+    *ngIf="routeEntity"
+    [routeEntity]="routeEntity"
+  ></app-horizontal-bar-chart>
 </div>
