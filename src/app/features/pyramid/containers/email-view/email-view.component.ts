@@ -77,13 +77,10 @@ export class EmailViewComponent implements OnInit {
 
     const entityMap: RouteEntity = {};
     for (let i = count; i > 0; i--) {
-      console.log('grades[i - 1]: ', grades[i - 1], i);
       const layer = count - i + 1;
-      console.log('layer: ', layer);
       entityMap[grades[i - 1]] = layer;
     }
 
-    console.log('entityMap: ', entityMap);
     return entityMap;
   }
 }
