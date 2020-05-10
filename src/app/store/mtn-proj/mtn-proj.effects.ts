@@ -23,7 +23,11 @@ import { Store, select } from '@ngrx/store';
 import { State } from './mtn-proj.reducers';
 import { selectEmail, selectPyramid } from './mtn-proj.selectors';
 import { MtnProjService } from './mtn-proj.service';
-import { CLIMBING_RATING_ORDER } from 'src/app/models/mtn-proj.models';
+import {
+  CLIMBING_RATING_ORDER,
+  ClimbingRating,
+  MtnProjRoute
+} from 'src/app/models/mtn-proj.models';
 
 @Injectable()
 export class MtnProjectEffects {
@@ -54,13 +58,7 @@ export class MtnProjectEffects {
               .pipe(map(routes => ({ routes, ticks })));
           }),
           mergeMap(({ ticks, routes }) => {
-            const transformedRoutes = routes.routes.map(r => {
-              let rating = r.rating;
-              if (rating === '5.11-') {
-                r.rating = '5.11a';
-              }
-              return r;
-            });
+            const transformedRoutes = transformGrade(routes);
             transformedRoutes.sort((a, b) => {
               return (
                 CLIMBING_RATING_ORDER.indexOf(b.rating) -
@@ -83,4 +81,60 @@ export class MtnProjectEffects {
       )
     )
   );
+}
+
+function transformGrade(routes: { routes: MtnProjRoute[] }) {
+  return routes.routes.map(r => {
+    let rating = r.rating;
+    if (rating === '5.5-' || rating === '5.5+') {
+      r.rating = '5.5';
+    } else if (rating === '5.6-' || rating === '5.6+') {
+      r.rating = '5.6';
+    } else if (rating === '5.7-' || rating === '5.7+') {
+      r.rating = '5.7';
+    } else if (rating === '5.8-' || rating === '5.8+') {
+      r.rating = '5.8';
+    } else if (rating === '5.9-' || rating === '5.9+') {
+      r.rating = '5.9';
+    } else if (rating === '5.10a/b') {
+      r.rating = '5.10a';
+    } else if (rating === '5.10b/c') {
+      r.rating = '5.10b';
+    } else if (rating === '5.11a/b') {
+      r.rating = '5.11a';
+    } else if (rating === '5.11b/c') {
+      r.rating = '5.11b';
+    } else if (rating === '5.12a/b') {
+      r.rating = '5.12a';
+    } else if (rating === '5.12b/c') {
+      r.rating = '5.12b';
+    } else if (rating === '5.10c/d') {
+      r.rating = '5.10c';
+    } else if (rating === '5.11c/d') {
+      r.rating = '5.11c';
+    } else if (rating === '5.12c/d') {
+      r.rating = '5.12c';
+    } else if (rating === '5.13a/b') {
+      r.rating = '5.13a';
+    } else if (rating === '5.13b/c') {
+      r.rating = '5.13b';
+    } else if (rating === '5.13c/d') {
+      r.rating = '5.12c';
+    } else if (rating === '5.14a/b') {
+      r.rating = '5.14a';
+    } else if (rating === '5.14b/c') {
+      r.rating = '5.14b';
+    } else if (rating === '5.14c/d') {
+      r.rating = '5.14c';
+    } else if (rating === '5.11-') {
+      r.rating = '5.11a';
+    } else if (rating === '5.11+') {
+      r.rating = '5.11c';
+    } else if (rating === '5.12-') {
+      r.rating = '5.12a';
+    } else if (rating === '5.12+') {
+      r.rating = '5.12c';
+    }
+    return r;
+  });
 }

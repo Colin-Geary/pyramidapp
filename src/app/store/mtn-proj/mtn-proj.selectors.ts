@@ -46,6 +46,9 @@ export const selectRouteRatings = createSelector(
       CLIMBING_RATING_ORDER.indexOf(props.min),
       CLIMBING_RATING_ORDER.indexOf(props.max) + 1
     );
+
+    console.log('props: ', props);
+    console.log('grades: ', grades);
     grades.map(r => {
       entityMap[r] = 0;
     });
