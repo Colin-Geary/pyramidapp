@@ -1,5 +1,12 @@
 <div class="chart-container">
+  <label class="container"
+    >&nbsp;
+    <span>Hide Ideal</span>
+    <input type="checkbox" (change)="toggleIdeal()" />
+    <span class="checkmark"></span>
+  </label>
   <canvas
+    #myChart
     baseChart
     height="400"
     [datasets]="barChartData"

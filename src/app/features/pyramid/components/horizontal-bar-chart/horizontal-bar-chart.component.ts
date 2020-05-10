@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ViewChild } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import {
@@ -12,6 +12,9 @@ import {
   styleUrls: ['./horizontal-bar-chart.component.scss']
 })
 export class HorizontalBarChartComponent implements OnInit, OnChanges {
+  @ViewChild('myChart')
+  chart: any;
+
   @Input()
   idealRouteEntity: RouteEntity;
 
@@ -129,5 +132,12 @@ export class HorizontalBarChartComponent implements OnInit, OnChanges {
     });
 
     return itemsArray;
+  }
+
+  toggleIdeal() {
+    console.log('HERE');
+    const copy = [...this.barChartData];
+    copy[0].hidden = !copy[0].hidden;
+    this.barChartData = copy;
   }
 }
