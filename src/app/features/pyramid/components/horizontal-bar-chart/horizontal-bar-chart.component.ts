@@ -86,12 +86,14 @@ export class HorizontalBarChartComponent implements OnInit, OnChanges {
     const { barChartData, barChartLabels } = this.getChartLabelsAndValues(
       this.idealRouteEntity,
       '#333333',
-      'Ideal Pyramid'
+      'Ideal Pyramid',
+      '#5c5c5c'
     );
     const { barChartData: actualBarChartData } = this.getChartLabelsAndValues(
       this.actualRouteEntity,
       this.color,
-      this.labelName
+      this.labelName,
+      this.hoverColor
     );
     this.barChartLabels = barChartLabels;
     this.barChartData = [...barChartData, ...actualBarChartData];
@@ -100,7 +102,8 @@ export class HorizontalBarChartComponent implements OnInit, OnChanges {
   getChartLabelsAndValues(
     routeEntity: RouteEntity,
     color: string,
-    label: string
+    label: string,
+    hoverColor: string
   ) {
     const difficulties = Object.keys(routeEntity);
     const counts = Object.values(routeEntity);
@@ -114,7 +117,7 @@ export class HorizontalBarChartComponent implements OnInit, OnChanges {
         data: sorted.map((v) => v.count),
         label: label,
         backgroundColor: color,
-        hoverBackgroundColor: this.hoverColor,
+        hoverBackgroundColor: hoverColor,
       },
     ];
     return { barChartData, barChartLabels };

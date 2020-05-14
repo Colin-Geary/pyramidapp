@@ -1,3 +1,5 @@
+// @import "~@ngx-share/button/themes/default/default-theme";
+
 .form-group {
   display: flex;
   margin-top: 20px;
@@ -50,8 +52,4 @@
 .warning {
   margin: 22px;
   font-weight: 300;
-}
-
-.test {
-  border: 2px solid red;
 }
