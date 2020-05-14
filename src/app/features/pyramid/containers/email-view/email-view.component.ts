@@ -161,14 +161,17 @@ export class EmailViewComponent implements OnInit {
       CLIMBING_RATING_ORDER.indexOf(lowerBound),
       CLIMBING_RATING_ORDER.indexOf(idealGrade) + 1
     );
-    const count = grades.length;
+    // const count = grades.length;
     const pyramidCounts = PYRAMID_MODELS.find(
       (p) => p.helperText === this.selectedPyramidHelperText
     ).value;
+    if (pyramidCounts.length > grades.length) {
+      pyramidCounts.splice(0, pyramidCounts.length - grades.length);
+    }
 
     const entityMap: RouteEntity = {};
-    for (let i = count; i > 0; i--) {
-      entityMap[grades[i - 1]] = pyramidCounts[i - 1];
+    for (let i = 0; i < grades.length; i++) {
+      entityMap[grades[i]] = pyramidCounts[i];
     }
 
     return entityMap;

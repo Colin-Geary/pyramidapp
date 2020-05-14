@@ -68,7 +68,8 @@ const mtnProjectReducer = createReducer(
   })),
   on(setMaxGradeAction, (state, { max }) => {
     const index = CLIMBING_RATING_ORDER.indexOf(max);
-    const split = CLIMBING_RATING_ORDER.slice(index - 8, index);
+    const min = index - 8 >= 0 ? index - 8 : 0;
+    const split = CLIMBING_RATING_ORDER.slice(min, index);
     const minGrade = split[0];
 
     return {
