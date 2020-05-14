@@ -134,36 +134,36 @@ export interface PyramidModel {
 export const PYRAMID_MODELS: PyramidModel[] = [
   {
     name: 'Weekend Warrior',
-    value: [5, 4, 3, 2, 1],
+    value: [8, 7, 6, 5, 4, 3, 2, 1],
     helperText: {
-      title: 'Weekend Warrior [5-4-3-2-1]',
+      title: 'Weekend Warrior [8-7-6-5-4-3-2-1]',
       subText:
         'This pyramid is your "average" pyramid. It is best for a climber who gets out on weekends regularly. ',
     },
   },
   {
     name: 'In Season',
-    value: [2, 2, 1, 1, 1],
+    value: [5, 4, 3, 2, 2, 1, 1, 1],
     helperText: {
-      title: 'In Season [2-2-1-1-1]',
+      title: 'In Season [5-4-3-2-2-1-1-1]',
       subText:
         "This pyramid is a steep pyramid best used when you are already partially through your season. Reference the In Season pyramid when there isn't much time left to send!",
     },
   },
   {
     name: 'Extended',
-    value: [12, 8, 4, 2, 1],
+    value: [24, 20, 16, 12, 8, 4, 2, 1],
     helperText: {
-      title: 'Extended [12-8-4-2-1]',
+      title: 'Extended [24-20-16-12-8-4-2-1]',
       subText:
         'The Extended pyramid is best used when you have lots of time left. This could be early season or during off season in a gym.',
     },
   },
   {
     name: 'Onsight',
-    value: [8, 7, 6, 0, 0],
+    value: [16, 12, 10, 8, 7, 6, 0, 0],
     helperText: {
-      title: 'Onsight [8-7-6-0-0]',
+      title: 'Onsight [16-12-10-8-7-6-0-0]',
       subText:
         "The Onsight pyramid is used for your traveling trips. Use this on trips that are beyond your local crag. You might only come to these crags a couple times a season. It's best to focus more on your onsight than your max redpoint.",
     },
