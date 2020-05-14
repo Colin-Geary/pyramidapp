@@ -33,7 +33,7 @@ import {
   map,
   merge,
 } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-email-view',
@@ -59,7 +59,11 @@ export class EmailViewComponent implements OnInit {
   climbingGrades: string[] = CLIMBING_RATING_ORDER;
   climbingGradesDescending: string[] = [...CLIMBING_RATING_ORDER].reverse();
 
-  constructor(private store: Store<any>, private route: ActivatedRoute) {}
+  constructor(
+    private store: Store<any>,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.minMaxGrade$ = this.store.pipe(select(minMaxGradeSelector));
@@ -87,6 +91,7 @@ export class EmailViewComponent implements OnInit {
       .subscribe((email) => {
         this.store.dispatch(setEmailAction({ email }));
         this.store.dispatch(getUserTicks());
+        this.router.navigate([], { queryParams: { email } });
       });
     this.minGrade.valueChanges.subscribe((min) =>
       this.store.dispatch(setMinGradeAction({ min }))
