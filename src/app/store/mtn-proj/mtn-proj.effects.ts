@@ -7,7 +7,7 @@ import {
   exhaustMap,
   map,
   catchError,
-  mergeMap
+  mergeMap,
 } from 'rxjs/operators';
 import {
   GET_USER_TICKS,
@@ -16,7 +16,7 @@ import {
   GET_USER_TICKS_SUCCESS,
   getUserRoutesSuccess,
   setMinGradeAction,
-  setMaxGradeAction
+  setMaxGradeAction,
 } from './mtn-proj.actions';
 import { of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
@@ -26,7 +26,7 @@ import { MtnProjService } from './mtn-proj.service';
 import {
   CLIMBING_RATING_ORDER,
   ClimbingRating,
-  MtnProjRoute
+  MtnProjRoute,
 } from 'src/app/models/mtn-proj.models';
 
 @Injectable()
@@ -39,7 +39,7 @@ export class MtnProjectEffects {
   loadUserTicks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(GET_USER_TICKS),
-      concatMap(action =>
+      concatMap((action) =>
         of(action).pipe(withLatestFrom(this.store.pipe(select(selectEmail))))
       ),
       exhaustMap(([action, email]) =>
@@ -47,15 +47,16 @@ export class MtnProjectEffects {
           mergeMap(({ ticks }) => {
             const routeIds = ticks
               .filter(
-                t =>
+                (t) =>
                   t.leadStyle === 'Flash' ||
                   t.leadStyle === 'Onsight' ||
+                  t.leadStyle === 'Pinkpoint' ||
                   t.leadStyle === 'Redpoint'
               )
-              .map(t => t.routeId);
+              .map((t) => t.routeId);
             return this.mtnProjectService
               .getRoutesFromIds(routeIds)
-              .pipe(map(routes => ({ routes, ticks })));
+              .pipe(map((routes) => ({ routes, ticks })));
           }),
           mergeMap(({ ticks, routes }) => {
             const transformedRoutes = transformGrade(routes);
@@ -65,18 +66,18 @@ export class MtnProjectEffects {
                 CLIMBING_RATING_ORDER.indexOf(a.rating)
               );
             });
-            const ratings = transformedRoutes.map(r => r.rating);
+            const ratings = transformedRoutes.map((r) => r.rating);
 
             return [
               getUserTicksSuccess({ ticks }),
               getUserRoutesSuccess({ routes: transformedRoutes }),
               setMinGradeAction({
-                min: ratings[ratings.length - 1]
+                min: ratings[ratings.length - 1],
               }),
-              setMaxGradeAction({ max: ratings[0] })
+              setMaxGradeAction({ max: ratings[0] }),
             ];
           }),
-          catchError(err => of(getUserTickFailure()))
+          catchError((err) => of(getUserTickFailure()))
         )
       )
     )
@@ -84,7 +85,7 @@ export class MtnProjectEffects {
 }
 
 function transformGrade(routes: { routes: MtnProjRoute[] }) {
-  return routes.routes.map(r => {
+  return routes.routes.map((r) => {
     let rating = r.rating;
     if (rating === '5.5-' || rating === '5.5+') {
       r.rating = '5.5';

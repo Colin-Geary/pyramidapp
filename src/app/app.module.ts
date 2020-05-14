@@ -12,6 +12,7 @@ import { MtnProjectEffects } from './store/mtn-proj/mtn-proj.effects';
 import { EmailViewModule } from './features/pyramid/containers/email-view/email-view.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { KeyInterceptor } from './features/pyramid/interceptors/pyramid.interceptor';
+import { EmailResolver } from './shared/resolvers/email.resolver';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,22 +21,23 @@ import { KeyInterceptor } from './features/pyramid/interceptors/pyramid.intercep
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot({
-      pyramid: fromMtnProject.reducer
+      pyramid: fromMtnProject.reducer,
     }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
-      logOnly: environment.production
+      logOnly: environment.production,
     }),
     EffectsModule.forRoot([MtnProjectEffects]),
-    EmailViewModule
+    EmailViewModule,
   ],
   providers: [
+    EmailResolver,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: KeyInterceptor,
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

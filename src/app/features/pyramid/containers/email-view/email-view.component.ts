@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import {
   setEmailAction,
@@ -24,7 +17,6 @@ import {
 } from 'src/app/models/mtn-proj.models';
 import { Observable } from 'rxjs';
 import {
-  selectTicks,
   selectRoutes,
   selectRouteRatings,
   loadingSelector,
@@ -34,7 +26,6 @@ import {
 import { FormControl, Validators } from '@angular/forms';
 import {
   debounceTime,
-  distinctUntilChanged,
   filter,
   withLatestFrom,
   switchMap,
@@ -42,6 +33,7 @@ import {
   map,
   merge,
 } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-email-view',
@@ -67,7 +59,7 @@ export class EmailViewComponent implements OnInit {
   climbingGrades: string[] = CLIMBING_RATING_ORDER;
   climbingGradesDescending: string[] = [...CLIMBING_RATING_ORDER].reverse();
 
-  constructor(private store: Store<any>, private cdr: ChangeDetectorRef) {}
+  constructor(private store: Store<any>, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.minMaxGrade$ = this.store.pipe(select(minMaxGradeSelector));
@@ -133,6 +125,13 @@ export class EmailViewComponent implements OnInit {
     this.maxGrade.setValue(this.climbingGradesDescending[0]);
     // this.minGrade.setValue(this.climbingGrades[0]);
     this.pyramidType.setValue(PYRAMID_MODELS[0].name);
+    if (this.route.snapshot.data.email) {
+      this.email.setValue(this.route.snapshot.data.email);
+      this.store.dispatch(
+        setEmailAction({ email: this.route.snapshot.data.email })
+      );
+      this.store.dispatch(getUserTicks());
+    }
   }
 
   getIdealEntityMap(
