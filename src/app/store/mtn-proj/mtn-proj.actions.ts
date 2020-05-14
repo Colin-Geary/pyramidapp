@@ -3,7 +3,7 @@ import {
   MtnProjTick,
   MtnProjRoute,
   ClimbingRating,
-  RouteEntity
+  RouteEntity,
 } from 'src/app/models/mtn-proj.models';
 
 export const SET_MIN_GRADE = '[Pyramid] set min grade';
@@ -19,7 +19,10 @@ export const GET_USER_ROUTES_FAILURE = '[MTN PROJECT] get user routes failure';
 
 export const SET_EMAIL = '[MTN PROJECT] set email';
 
-export const getUserTicks = createAction(GET_USER_TICKS);
+export const getUserTicks = createAction(
+  GET_USER_TICKS,
+  props<{ date: 'all-time' | 'this-year' }>()
+);
 export const getUserTicksSuccess = createAction(
   GET_USER_TICKS_SUCCESS,
   props<{ ticks: MtnProjTick[] }>()

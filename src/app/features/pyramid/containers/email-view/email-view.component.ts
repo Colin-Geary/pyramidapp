@@ -51,6 +51,7 @@ export class EmailViewComponent implements OnInit {
   email: FormControl = new FormControl(null, [Validators.email]);
   minGrade: FormControl = new FormControl();
   maxGrade: FormControl = new FormControl();
+  sinceDate: FormControl = new FormControl();
   pyramidType: FormControl = new FormControl(null, []);
   pyramidTypes: PyramidModel[] = PYRAMID_MODELS;
   selectedPyramidHelperText: { title: string; subText: string };
@@ -87,11 +88,16 @@ export class EmailViewComponent implements OnInit {
       .pipe(debounceTime(100));
 
     this.email.valueChanges
-      .pipe(filter((val) => this.email.valid))
-      .subscribe((email) => {
+      .pipe(
+        filter((val) => this.email.valid),
+        merge(this.sinceDate.valueChanges),
+        withLatestFrom(this.email.valueChanges, this.sinceDate.valueChanges)
+      )
+      .subscribe((val) => {
+        const email = val[1];
+        const sinceDate = val[2];
         this.store.dispatch(setEmailAction({ email }));
-        this.store.dispatch(getUserTicks());
-        this.router.navigate([], { queryParams: { email } });
+        this.store.dispatch(getUserTicks({ date: sinceDate }));
       });
     this.minGrade.valueChanges.subscribe((min) =>
       this.store.dispatch(setMinGradeAction({ min }))
@@ -127,7 +133,9 @@ export class EmailViewComponent implements OnInit {
       })
     );
 
+    this.sinceDate.setValue('all-time');
     this.maxGrade.setValue(this.climbingGradesDescending[0]);
+
     // this.minGrade.setValue(this.climbingGrades[0]);
     this.pyramidType.setValue(PYRAMID_MODELS[0].name);
     if (this.route.snapshot.data.email) {
@@ -135,7 +143,13 @@ export class EmailViewComponent implements OnInit {
       this.store.dispatch(
         setEmailAction({ email: this.route.snapshot.data.email })
       );
-      this.store.dispatch(getUserTicks());
+      if (this.route.snapshot.data.ticks) {
+        this.store.dispatch(
+          getUserTicks({ date: this.route.snapshot.data.ticks })
+        );
+      } else {
+        this.store.dispatch(getUserTicks({ date: 'all-time' }));
+      }
     }
   }
 
@@ -143,25 +157,20 @@ export class EmailViewComponent implements OnInit {
     idealGrade: ClimbingRating,
     lowerBound: ClimbingRating
   ): RouteEntity {
-    console.log('idealGrade: ', idealGrade);
-    console.log('lowerBound: ', lowerBound);
     const grades = CLIMBING_RATING_ORDER.slice(
       CLIMBING_RATING_ORDER.indexOf(lowerBound),
       CLIMBING_RATING_ORDER.indexOf(idealGrade) + 1
     );
-    console.log('grades: ', grades);
     const count = grades.length;
     const pyramidCounts = PYRAMID_MODELS.find(
       (p) => p.helperText === this.selectedPyramidHelperText
     ).value;
-    console.log('pyramidCounts: ', pyramidCounts);
 
     const entityMap: RouteEntity = {};
     for (let i = count; i > 0; i--) {
       entityMap[grades[i - 1]] = pyramidCounts[i - 1];
     }
 
-    console.log('entityMap: ', entityMap);
     return entityMap;
   }
 }

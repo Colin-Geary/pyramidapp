@@ -3,13 +3,13 @@ import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import {
   RouteEntity,
-  CLIMBING_RATING_ORDER
+  CLIMBING_RATING_ORDER,
 } from 'src/app/models/mtn-proj.models';
 
 @Component({
   selector: 'app-horizontal-bar-chart',
   templateUrl: './horizontal-bar-chart.component.html',
-  styleUrls: ['./horizontal-bar-chart.component.scss']
+  styleUrls: ['./horizontal-bar-chart.component.scss'],
 })
 export class HorizontalBarChartComponent implements OnInit, OnChanges {
   @ViewChild('myChart')
@@ -47,17 +47,17 @@ export class HorizontalBarChartComponent implements OnInit, OnChanges {
         {
           ticks: {
             beginAtZero: true,
-            callback: function(value: any) {
+            callback: function (value: any) {
               if (value % 1 === 0) {
                 return value;
               }
             },
             max: this.max,
-            min: this.min
-          }
-        }
-      ]
-    }
+            min: this.min,
+          },
+        },
+      ],
+    },
   };
   // barChartLabels: Label[] = [
   //   '2006',
@@ -108,14 +108,14 @@ export class HorizontalBarChartComponent implements OnInit, OnChanges {
       return { difficulty: d, count: counts[index] };
     });
     const sorted = this.sortRatingsAndDifficulties(joinedDifficultyAndCount);
-    const barChartLabels = sorted.map(v => v.difficulty);
+    const barChartLabels = sorted.map((v) => v.difficulty);
     const barChartData = [
       {
-        data: sorted.map(v => v.count),
+        data: sorted.map((v) => v.count),
         label: label,
         backgroundColor: color,
-        hoverBackgroundColor: this.hoverColor
-      }
+        hoverBackgroundColor: this.hoverColor,
+      },
     ];
     return { barChartData, barChartLabels };
   }
@@ -124,7 +124,7 @@ export class HorizontalBarChartComponent implements OnInit, OnChanges {
     ratingsArray: { difficulty: string; count: number }[]
   ) {
     const itemsArray = [...ratingsArray];
-    itemsArray.sort(function(a, b) {
+    itemsArray.sort(function (a, b) {
       return (
         CLIMBING_RATING_ORDER.indexOf(b.difficulty) -
         CLIMBING_RATING_ORDER.indexOf(a.difficulty)
@@ -135,7 +135,6 @@ export class HorizontalBarChartComponent implements OnInit, OnChanges {
   }
 
   toggleIdeal() {
-    console.log('HERE');
     const copy = [...this.barChartData];
     copy[0].hidden = !copy[0].hidden;
     this.barChartData = copy;

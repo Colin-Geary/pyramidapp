@@ -15,6 +15,13 @@
     }}</option>
   </select>
 </div>
+<div class="form-group">
+  <label for="date">Ticks</label>
+  <select class="form-field" [formControl]="sinceDate" name="date">
+    <option value="all-time">All Time</option>
+    <option value="this-year">This Year</option>
+  </select>
+</div>
 <!-- <div class="form-group">
   <label for="min-grade">Min Grade</label>
   <select class="form-field" [formControl]="minGrade" name="min-grade">

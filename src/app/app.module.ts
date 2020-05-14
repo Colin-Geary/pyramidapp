@@ -13,6 +13,7 @@ import { EmailViewModule } from './features/pyramid/containers/email-view/email-
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { KeyInterceptor } from './features/pyramid/interceptors/pyramid.interceptor';
 import { EmailResolver } from './shared/resolvers/email.resolver';
+import { TicksResolver } from './shared/resolvers/ticks.resolver';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +33,7 @@ import { EmailResolver } from './shared/resolvers/email.resolver';
   ],
   providers: [
     EmailResolver,
+    TicksResolver,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: KeyInterceptor,

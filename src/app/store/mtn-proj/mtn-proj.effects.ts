@@ -28,13 +28,15 @@ import {
   ClimbingRating,
   MtnProjRoute,
 } from 'src/app/models/mtn-proj.models';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class MtnProjectEffects {
   constructor(
     private actions$: Actions,
     private store: Store<any>,
-    private mtnProjectService: MtnProjService
+    private mtnProjectService: MtnProjService,
+    private router: Router
   ) {}
   loadUserTicks$ = createEffect(() =>
     this.actions$.pipe(
@@ -45,13 +47,19 @@ export class MtnProjectEffects {
       exhaustMap(([action, email]) =>
         this.mtnProjectService.getUserTicks(email).pipe(
           mergeMap(({ ticks }) => {
+            const ticksParam = (action as any).date
+              ? (action as any).date
+              : 'all-time';
+            const date =
+              ticksParam === 'all-time' ? 0 : new Date().getFullYear();
             const routeIds = ticks
               .filter(
                 (t) =>
-                  t.leadStyle === 'Flash' ||
-                  t.leadStyle === 'Onsight' ||
-                  t.leadStyle === 'Pinkpoint' ||
-                  t.leadStyle === 'Redpoint'
+                  (t.leadStyle === 'Flash' ||
+                    t.leadStyle === 'Onsight' ||
+                    t.leadStyle === 'Pinkpoint' ||
+                    t.leadStyle === 'Redpoint') &&
+                  +t.date.split('-')[0] >= date
               )
               .map((t) => t.routeId);
             return this.mtnProjectService
@@ -68,6 +76,12 @@ export class MtnProjectEffects {
             });
             const ratings = transformedRoutes.map((r) => r.rating);
 
+            const ticksParam = (action as any).date
+              ? (action as any).date
+              : 'all-time';
+            this.router.navigate([], {
+              queryParams: { email, ticks: ticksParam },
+            });
             return [
               getUserTicksSuccess({ ticks }),
               getUserRoutesSuccess({ routes: transformedRoutes }),
