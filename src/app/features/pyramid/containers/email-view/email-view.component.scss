@@ -31,6 +31,20 @@
       outline: none;
     }
   }
+
+  .helper-text {
+    margin-top: 5px;
+    font-weight: 300;
+    padding: 10px;
+    background-color: rgba(187, 187, 187, 0.2);
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 18px;
+
+    h2 {
+      font-size: 12px;
+    }
+  }
 }
 
 .warning {

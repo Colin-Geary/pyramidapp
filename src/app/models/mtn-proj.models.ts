@@ -41,6 +41,7 @@ export type ClimbingRating =
   | '5.10c/d'
   | '5.10d'
   | '5.11-'
+  | '5.11'
   | '5.11+'
   | '5.11a'
   | '5.11a/b'
@@ -50,6 +51,7 @@ export type ClimbingRating =
   | '5.11c/d'
   | '5.11d'
   | '5.12-'
+  | '5.12'
   | '5.12+'
   | '5.12a'
   | '5.12a/b'
@@ -98,7 +100,7 @@ export const CLIMBING_RATING_ORDER = [
   '5.14a',
   '5.14b',
   '5.14c',
-  '5.14d'
+  '5.14d',
 ];
 
 export interface MtnProjRoute {
@@ -122,3 +124,48 @@ export interface MtnProjRoute {
 export interface RouteEntity {
   [key: string]: number;
 }
+
+export interface PyramidModel {
+  name: string;
+  value: number[];
+  helperText: { title: string; subText: string };
+}
+
+export const PYRAMID_MODELS: PyramidModel[] = [
+  {
+    name: 'Weekend Warrior',
+    value: [5, 4, 3, 2, 1],
+    helperText: {
+      title: 'Weekend Warrior [5-4-3-2-1]',
+      subText:
+        'This pyramid is your "average" pyramid. It is best for a climber who gets out on weekends regularly. ',
+    },
+  },
+  {
+    name: 'In Season',
+    value: [2, 2, 1, 1, 1],
+    helperText: {
+      title: 'In Season [2-2-1-1-1]',
+      subText:
+        "This pyramid is a steep pyramid best used when you are already partially through your season. Reference the In Season pyramid when there isn't much time left to send!",
+    },
+  },
+  {
+    name: 'Extended',
+    value: [12, 8, 4, 2, 1],
+    helperText: {
+      title: 'Extended [12-8-4-2-1]',
+      subText:
+        'The Extended pyramid is best used when you have lots of time left. This could be early season or during off season in a gym.',
+    },
+  },
+  {
+    name: 'Onsight',
+    value: [8, 7, 6, 0, 0],
+    helperText: {
+      title: 'Onsight [8-7-6-0-0]',
+      subText:
+        "The Onsight pyramid is used for your traveling trips. Use this on trips that are beyond your local crag. You might only come to these crags a couple times a season. It's best to focus more on your onsight than your max redpoint.",
+    },
+  },
+];

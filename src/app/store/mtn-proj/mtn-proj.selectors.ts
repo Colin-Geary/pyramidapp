@@ -4,7 +4,7 @@ import {
   MtnProjRoute,
   ClimbingRating,
   RouteEntity,
-  CLIMBING_RATING_ORDER
+  CLIMBING_RATING_ORDER,
 } from 'src/app/models/mtn-proj.models';
 
 export interface AppState {
@@ -47,12 +47,10 @@ export const selectRouteRatings = createSelector(
       CLIMBING_RATING_ORDER.indexOf(props.max) + 1
     );
 
-    console.log('props: ', props);
-    console.log('grades: ', grades);
-    grades.map(r => {
+    grades.map((r) => {
       entityMap[r] = 0;
     });
-    routes.forEach(r => {
+    routes.forEach((r) => {
       let rating = r.rating;
 
       if (!grades.includes(rating)) {

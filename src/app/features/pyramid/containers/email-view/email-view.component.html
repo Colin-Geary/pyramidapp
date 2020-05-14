@@ -8,20 +8,32 @@
   />
 </div>
 <div class="form-group">
-  <label for="max-grade">Max Grade</label>
+  <label for="max-grade">Target Redpoint</label>
   <select class="form-field" [formControl]="maxGrade" name="max-grade">
     <option *ngFor="let grade of climbingGradesDescending" [value]="grade">{{
       grade
     }}</option>
   </select>
 </div>
-<div class="form-group">
+<!-- <div class="form-group">
   <label for="min-grade">Min Grade</label>
   <select class="form-field" [formControl]="minGrade" name="min-grade">
     <option *ngFor="let grade of climbingGrades" [value]="grade">{{
       grade
     }}</option>
   </select>
+</div> -->
+<div class="form-group">
+  <label for="pyramidType">Pyramid Type</label>
+  <select class="form-field" [formControl]="pyramidType" name="pyramidType">
+    <option *ngFor="let type of pyramidTypes" [value]="type.name">{{
+      type.name
+    }}</option>
+  </select>
+  <div *ngIf="selectedPyramidHelperText" class="helper-text">
+    <h2>{{ selectedPyramidHelperText.title }}</h2>
+    <div>{{ selectedPyramidHelperText.subText }}</div>
+  </div>
 </div>
 <app-spinner *ngIf="loading$ | async as loading"></app-spinner>
 <div *ngIf="routeRatings$ | async as routeEntity; else noUser">

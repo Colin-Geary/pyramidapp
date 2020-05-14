@@ -6,13 +6,13 @@ import {
   getUserTickFailure,
   getUserRoutesSuccess,
   setMinGradeAction,
-  setMaxGradeAction
+  setMaxGradeAction,
 } from './mtn-proj.actions';
 import {
   MtnProjTick,
   MtnProjRoute,
   ClimbingRating,
-  CLIMBING_RATING_ORDER
+  CLIMBING_RATING_ORDER,
 } from 'src/app/models/mtn-proj.models';
 
 export interface State {
@@ -32,44 +32,51 @@ const initialState: State = {
   minGrade: CLIMBING_RATING_ORDER[0],
   maxGrade: CLIMBING_RATING_ORDER[CLIMBING_RATING_ORDER.length - 1],
   loading: false,
-  loaded: false
+  loaded: false,
 };
 
 const mtnProjectReducer = createReducer(
   initialState,
-  on(getUserTicks, state => ({
+  on(getUserTicks, (state) => ({
     ...state,
     loading: true,
-    loaded: false
+    loaded: false,
   })),
-  on(getUserTickFailure, state => ({
+  on(getUserTickFailure, (state) => ({
     ...state,
     ticks: [],
     routes: [],
     loading: false,
-    loaded: false
+    loaded: false,
   })),
   on(getUserTicksSuccess, (state, { ticks }) => ({
     ...state,
     ticks,
     loading: false,
-    loaded: true
+    loaded: true,
   })),
   on(getUserRoutesSuccess, (state, { routes }) => ({
     ...state,
     routes,
     loading: false,
-    loaded: true
+    loaded: true,
   })),
   on(setEmailAction, (state, { email }) => ({ ...state, email })),
   on(setMinGradeAction, (state, { min }) => ({
     ...state,
-    minGrade: min
+    minGrade: min,
   })),
-  on(setMaxGradeAction, (state, { max }) => ({
-    ...state,
-    maxGrade: max
-  }))
+  on(setMaxGradeAction, (state, { max }) => {
+    const index = CLIMBING_RATING_ORDER.indexOf(max);
+    const split = CLIMBING_RATING_ORDER.slice(index - 4, index);
+    const minGrade = split[0];
+
+    return {
+      ...state,
+      maxGrade: max,
+      minGrade,
+    };
+  })
 );
 
 export function reducer(state: State | undefined, action: Action) {
