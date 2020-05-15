@@ -143,12 +143,22 @@ function transformGrade(routes: { routes: MtnProjRoute[] }) {
       r.rating = '5.14c';
     } else if (rating === '5.11-') {
       r.rating = '5.11a';
+    } else if (rating === '5.11') {
+      r.rating = '5.11b';
     } else if (rating === '5.11+') {
-      r.rating = '5.11c';
+      r.rating = '5.11d';
+    } else if (rating === '5.12') {
+      r.rating = '5.12b';
     } else if (rating === '5.12-') {
       r.rating = '5.12a';
     } else if (rating === '5.12+') {
-      r.rating = '5.12c';
+      r.rating = '5.12d';
+    } else if (rating === '5.10') {
+      r.rating = '5.10b';
+    } else if (rating === '5.10-') {
+      r.rating = '5.10a';
+    } else if (rating === '5.10+') {
+      r.rating = '5.10d';
     }
     return r;
   });

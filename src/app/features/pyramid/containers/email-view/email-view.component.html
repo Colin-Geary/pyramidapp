@@ -41,6 +41,10 @@
     <h2>{{ selectedPyramidHelperText.title }}</h2>
     <div>{{ selectedPyramidHelperText.subText }}</div>
   </div>
+  <a href="https://warriorsoftheweekend.com/tick-pyramid-app/"
+    ><span>Where do these pyramids come from?</span>
+    <span>Why are my ticks/grades slightly different?</span></a
+  >
 </div>
 <app-spinner *ngIf="loading$ | async as loading"></app-spinner>
 <div *ngIf="routeRatings$ | async as routeEntity; else noUser">

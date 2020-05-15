@@ -53,3 +53,12 @@
   margin: 22px;
   font-weight: 300;
 }
+
+a {
+  margin-top: 10px;
+  font-size: 12px;
+  text-decoration: none;
+  span {
+    display: block;
+  }
+}
